@@ -1,0 +1,37 @@
+#!/bin/bash
+
+START="$1"
+ENDED="$2"
+
+if [[ -z "$START" ]]; then
+  echo "Usage: build-time START_UNIX [END_UNIX]"
+  exit 1
+elif [[ "$START" -ge "$ENDED" ]]; then
+  echo "Error: Start greater than or equal to end."
+  exit 1
+fi
+
+[[ -z "$ENDED" ]] && ENDED=`date +%s`         # default end time
+DELTA=$(( ENDED - START ))                    # build in seconds
+
+T=""                                          # output text
+R=$DELTA                                      # remainder
+
+D=$(( R / 86400 )); R=$(( R - (D * 86400) ))  # days
+(( D > 0 )) && T="%d day(s), " || unset D
+
+H=$(( R / 3600 )); R=$(( R - (H * 3600) ))    # hours
+(( H > 0 )) && T+="%d hour(s), " || unset H
+
+M=$(( R / 60 )); R=$(( R - (M * 60) ))        # minutes
+(( M > 0 )) && T+="%d minute(s), " || unset M
+
+S=$R                                          # seconds
+if (( S > 0 )); then
+  T+="%d second(s)"
+else
+  T="${T:0:-2}" # trim comma
+  unset S
+fi
+
+printf -- "$T\n" $D $H $M $S

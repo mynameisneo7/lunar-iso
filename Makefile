@@ -2,8 +2,14 @@
 # Makefile to make ISO's
 #
 
+# unixtime of build start
+ISO_BUILD_START = $(shell date +%s)
+
 # Default target
 all: iso
+	@printf '\nDate Started  : %s\n' '$(shell date -d@$(ISO_BUILD_START))'
+	@printf   'Date Completed: %s\n' '$(shell date)'
+	@printf '\nTotal Build Time:' && ./build-time $(ISO_BUILD_START) $(shell date +%s)
 
 #
 # all user configurable options are in conf/config
