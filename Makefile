@@ -53,8 +53,7 @@ include mkfiles/iso.mk
 
 clean:
 	rm -rf $(ISO_TARGET) $(ISO_SOURCE)/spool/.copied $(ISO_SOURCE)/cache
-	LUNAR_CACHE = $(shell lsh echo '$$SOURCE_CACHE')
-	find $(LUNAR_CACHE) -type f -mtime $(ISO_SRC_REFRESH) -delete
+	find $(ISO_SOURCE)/spool -type f -mtime $(ISO_SRC_REFRESH) -delete
 
 # Convenient target for development
 chroot:
