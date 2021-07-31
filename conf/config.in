@@ -46,3 +46,6 @@ ISO_LUNAR_MODULE = lunar
 
 # set this to the base optimization (e.g. i386, i586, i686, x86-64)
 ISO_GCCARCH = i686
+
+# number of days to keep source files
+ISO_SRC_REFRESH = 3
