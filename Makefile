@@ -6,10 +6,10 @@
 ISO_BUILD_START = $(shell date +%s)
 
 # Default target
-all: iso
+all: timestamp iso
 	@printf '\nDate Started  : %s\n' '$(shell date -d@$(ISO_BUILD_START))'
 	@printf   'Date Completed: %s\n' '$(shell date)'
-	@printf '\nTotal Build Time:' && ./build-time $(ISO_BUILD_START) $(shell date +%s)
+	@printf '\nTotal Build Time:' && $(ISO_SOURCE)/scripts/build-time $(ISO_BUILD_START) $(shell date +%s)
 
 #
 # all user configurable options are in conf/config
@@ -69,3 +69,6 @@ dist:
 	@sha1sum lunar-$(ISO_VERSION).iso > lunar-$(ISO_VERSION).iso.sha1
 	@xz lunar-$(ISO_VERSION).iso
 	@sha1sum lunar-$(ISO_VERSION).iso.xz > lunar-$(ISO_VERSION).iso.xz.sha1
+
+timestamp:
+	@echo $(ISO_BUILD_START)
