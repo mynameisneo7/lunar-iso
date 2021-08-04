@@ -1,17 +1,22 @@
 #!/bin/bash
 
 START="$1"
-ENDED="$2"
+ENDED="${2:-`date +%s`}"
 
-if [[ -z "$START" ]]; then
-  echo "Usage: build-time START_UNIX [END_UNIX]"
+if [[ -z "$START" || "$START" == "-h" || "$START" == "--help" ]]; then
+  printf 'Usage: build-time START_UNIX [END_UNIX]\n'
+  printf '       build-time FILE_PATH [END_UNIX]\n'
   exit 1
-elif [[ "$START" -ge "$ENDED" ]]; then
+elif [[ -e "$START" ]]; then
+  START=`stat -c %Y "$1"`
+elif [[ ! "$START$ENDED" =~ ^[0-9]+$ ]]; then
+  echo "Error: Start and/or end not valid."
+  exit 1
+elif [[ "$START" -ge "ENDED" ]]; then
   echo "Error: Start greater than or equal to end."
   exit 1
 fi
 
-[[ -z "$ENDED" ]] && ENDED=`date +%s`         # default end time
 DELTA=$(( ENDED - START ))                    # build in seconds
 
 T=""                                          # output text
@@ -34,4 +39,5 @@ else
   unset S
 fi
 
-printf -- "$T\n" $D $H $M $S
+printf "\nDate Started  : %s\nDate Completed: %s\n\nBuild Time    : $T\n" \
+  "$START" "$ENDED" $D $H $M $S   # unquoted for a reason

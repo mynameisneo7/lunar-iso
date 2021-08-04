@@ -2,14 +2,9 @@
 # Makefile to make ISO's
 #
 
-# unixtime of build start
-ISO_BUILD_START = $(shell date +%s)
-
 # Default target
-all: timestamp iso
-	@printf '\nDate Started  : %s\n' '$(shell date -d@$(ISO_BUILD_START))'
-	@printf   'Date Completed: %s\n' '$(shell date)'
-	@printf '\nTotal Build Time:' && $(ISO_SOURCE)/scripts/build-time $(ISO_BUILD_START) $(shell date +%s)
+all: .build-ts iso
+	@$(ISO_SOURCE)/scripts/build-time $(ISO_SOURCE)/.start-ts
 
 #
 # all user configurable options are in conf/config
@@ -58,7 +53,7 @@ include mkfiles/installer.mk
 include mkfiles/iso.mk
 
 clean:
-	rm -rf $(ISO_TARGET) $(ISO_SOURCE)/spool/.copied $(ISO_SOURCE)/cache
+	rm -rf $(ISO_TARGET) $(ISO_SOURCE)/spool/.copied $(ISO_SOURCE)/cache $(ISO_SOURCE)/.build-ts
 	find $(ISO_SOURCE)/spool -type f -mtime $(ISO_SRC_REFRESH) -delete
 
 # Convenient target for development
@@ -70,5 +65,6 @@ dist:
 	@xz lunar-$(ISO_VERSION).iso
 	@sha1sum lunar-$(ISO_VERSION).iso.xz > lunar-$(ISO_VERSION).iso.xz.sha1
 
-timestamp:
-	@echo $(ISO_BUILD_START)
+.build-ts:
+	@rm -f "$@"
+	@date +%s > "$@"
